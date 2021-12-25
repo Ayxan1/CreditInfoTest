@@ -9,7 +9,7 @@
         public Individual Individual { get; set; }
         public int RoleId { get; set; }
         public Role Role { get; set; }
-        public int CurrencyId { get; set; }
+        public int? CurrencyId { get; set; }
         public Currency Currency { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.ApplicationDataContext;
+using WebApplication1.Services;
 
 namespace WebApplication1
 {
@@ -28,6 +29,12 @@ namespace WebApplication1
         {
             services.AddDbContext<DataContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IIndividualService, IndividualService>();
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             services.AddControllers();
         }

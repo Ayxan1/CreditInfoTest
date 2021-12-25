@@ -16,6 +16,6 @@ namespace WebApplication1.ApplicationDataContext
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<PhaseOfContract> PhaseOfContracts { get; set; }
-
+        public DbSet<Gender> Genders { get; set; }
     }
 }

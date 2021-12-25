@@ -10,12 +10,13 @@ namespace WebApplication1.Models
         public string CustomerCode { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string NationalID { get; set; }
 
         public int ContractId { get; set; }
         public Contract Contract { get; set; }
         public SubjectRole SubjectRole { get; set; }
+        public int GenderId { get; set; }
+        public Gender Gender { get; set; }
     }
 }

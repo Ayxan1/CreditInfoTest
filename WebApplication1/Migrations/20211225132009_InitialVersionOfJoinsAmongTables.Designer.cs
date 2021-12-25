@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApplication1.ApplicationDataContext;
@@ -9,9 +10,10 @@ using WebApplication1.ApplicationDataContext;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211225132009_InitialVersionOfJoinsAmongTables")]
+    partial class InitialVersionOfJoinsAmongTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +46,8 @@ namespace WebApplication1.Migrations
                     b.Property<int>("ContractId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Currency")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("CurrentBalanceId")
                         .HasColumnType("numeric");
@@ -68,8 +70,8 @@ namespace WebApplication1.Migrations
                     b.Property<decimal>("OverdueBalance")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("PhaseOfContractId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PhaseOfContract")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("RealEndDate")
                         .HasColumnType("timestamp without time zone");
@@ -79,26 +81,7 @@ namespace WebApplication1.Migrations
                     b.HasIndex("ContractId")
                         .IsUnique();
 
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("PhaseOfContractId");
-
                     b.ToTable("ContractDatas");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Currency", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Currencies");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Individual", b =>
@@ -136,36 +119,6 @@ namespace WebApplication1.Migrations
                     b.ToTable("Individuals");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.PhaseOfContract", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PhaseOfContracts");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("WebApplication1.Models.SubjectRole", b =>
                 {
                     b.Property<int>("Id")
@@ -173,8 +126,8 @@ namespace WebApplication1.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Currency")
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("GuaranteeAmount")
                         .HasColumnType("numeric");
@@ -182,17 +135,13 @@ namespace WebApplication1.Migrations
                     b.Property<int>("IndividualId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
+                    b.Property<string>("RoleOfCustomer")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
-
                     b.HasIndex("IndividualId")
                         .IsUnique();
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("SubjectRoles");
                 });
@@ -205,23 +154,7 @@ namespace WebApplication1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication1.Models.Currency", "Currency")
-                        .WithMany("ContractDatas")
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication1.Models.PhaseOfContract", "PhaseOfContract")
-                        .WithMany("ContractDatas")
-                        .HasForeignKey("PhaseOfContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Contract");
-
-                    b.Navigation("Currency");
-
-                    b.Navigation("PhaseOfContract");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Individual", b =>
@@ -237,29 +170,13 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.SubjectRole", b =>
                 {
-                    b.HasOne("WebApplication1.Models.Currency", "Currency")
-                        .WithMany("SubjectRoles")
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebApplication1.Models.Individual", "Individual")
                         .WithOne("SubjectRole")
                         .HasForeignKey("WebApplication1.Models.SubjectRole", "IndividualId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication1.Models.Role", "Role")
-                        .WithMany("SubjectRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Currency");
-
                     b.Navigation("Individual");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Contract", b =>
@@ -269,26 +186,9 @@ namespace WebApplication1.Migrations
                     b.Navigation("Individuals");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Currency", b =>
-                {
-                    b.Navigation("ContractDatas");
-
-                    b.Navigation("SubjectRoles");
-                });
-
             modelBuilder.Entity("WebApplication1.Models.Individual", b =>
                 {
                     b.Navigation("SubjectRole");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.PhaseOfContract", b =>
-                {
-                    b.Navigation("ContractDatas");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Role", b =>
-                {
-                    b.Navigation("SubjectRoles");
                 });
 #pragma warning restore 612, 618
         }
